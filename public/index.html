@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#112d32">
+    <title>Laporan Operasional | ETT Bogor</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/fuel-utils.js" defer></script>
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <div id="loginView" class="login-view" hidden>
+      <section class="login-card">
+        <div class="login-logo-frame"><img class="login-company-logo" src="/company-logo.png" alt="Logo PT Estika Tata Tiara Tbk"></div>
+        <p class="eyebrow">PT. ESTIKA TATA TIARA BOGOR</p>
+        <h1>Laporan Operasional</h1>
+        <p id="loginDescription" class="muted">Masukkan PIN pribadi untuk membuka ruang laporan.</p>
+        <form id="loginForm">
+          <div id="pinLoginFields" class="login-fields">
+            <label for="pinInput">PIN akses</label>
+            <input id="pinInput" name="pin" type="password" inputmode="numeric" pattern="[0-9]{6,12}" minlength="6" maxlength="12" autocomplete="current-password" required autofocus>
+          </div>
+          <div id="cloudLoginFields" class="login-fields" hidden>
+            <label for="emailInput">Email akun pribadi</label>
+            <input id="emailInput" name="email" type="email" autocomplete="username" placeholder="nama@email.com">
+            <label for="passwordInput" class="login-password-label">Kata sandi</label>
+            <input id="passwordInput" name="password" type="password" autocomplete="current-password">
+          </div>
+          <p id="loginError" class="form-error" role="alert"></p>
+          <button class="button button-primary button-full" type="submit">Masuk dengan aman</button>
+        </form>
+        <p id="securityNote" class="security-note"><span class="lock-dot"></span> Akses pribadi melalui jaringan lokal</p>
+      </section>
+    </div>
+
+    <div id="appView" class="app-shell" hidden>
+      <aside class="sidebar">
+        <a class="brand" href="#" aria-label="ETT Laporan Operasional">
+          <span class="brand-mark"><img class="brand-logo-image" src="/company-logo.png" alt=""></span>
+          <span><strong>ETT Bogor</strong><small>OPERASIONAL</small></span>
+        </a>
+        <div class="sidebar-label">RUANG KERJA</div>
+        <nav id="mainTabs" class="main-tabs" aria-label="Bagian laporan">
+          <button class="tab-button is-active" data-tab="overview" type="button"><span class="nav-icon">▦</span> Ringkasan</button>
+          <button class="tab-button" data-tab="bop" type="button"><span class="nav-icon">↗</span> Rincian BOP</button>
+          <button class="tab-button" data-tab="fuel" type="button"><span class="nav-icon">◉</span> BBM Cash</button>
+          <button class="tab-button" data-tab="master" type="button"><span class="nav-icon">▤</span> Master Data</button>
+        </nav>
+        <div class="sidebar-footer">
+          <div class="private-badge"><span class="lock-dot"></span> Jaringan pribadi</div>
+          <button id="logoutButton" class="logout-button" type="button">Keluar dari aplikasi</button>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">PUSAT KENDALI OPERASIONAL</p>
+            <h1 id="pageTitle">Ringkasan laporan</h1>
+          </div>
+          <div class="topbar-actions">
+            <label class="month-control"><span>Periode laporan</span><input id="monthInput" type="month"></label>
+            <button id="printButton" class="button button-secondary print-button" type="button" aria-label="Cetak laporan"><span aria-hidden="true">▤</span><span class="print-button-label">Cetak</span></button>
+            <button id="exportButton" class="button button-primary" type="button"><span aria-hidden="true">↓</span> Unduh Excel</button>
+          </div>
+        </header>
+
+        <div class="content-area">
+          <header class="print-document-header print-only">
+            <img src="/company-logo.png" alt="">
+            <div>
+              <p>PT. ESTIKA TATA TIARA BOGOR</p>
+              <span id="printReportHeading">Laporan Operasional</span>
+            </div>
+            <strong id="printPeriodHeading">—</strong>
+          </header>
+          <section id="overviewPanel" class="panel-view">
+            <div class="welcome-row">
+              <div><p class="eyebrow">LAPORAN BULANAN</p><h2 id="periodHeading">—</h2><p class="muted">Data tersimpan otomatis di komputer host.</p></div>
+              <span id="saveStatus" class="save-status"><i></i> Tersimpan</span>
+            </div>
+            <div class="archive-months">
+              <span class="archive-label">ARSIP TERSEDIA</span>
+              <div id="archiveMonthList" class="archive-month-list" aria-label="Pilih bulan laporan"></div>
+            </div>
+            <div class="summary-grid">
+              <article class="summary-card fleet-summary-card"><span class="summary-icon icon-gold">A</span><div><p>Total armada terdaftar</p><strong id="vehicleCount">0</strong><small id="driverCount">0 driver terdata</small></div></article>
+              <article class="summary-card"><span class="summary-icon icon-blue">B</span><div><p>Total pengeluaran BOP</p><strong id="bopTotal">Rp0</strong><small id="bopCount">0 catatan</small></div></article>
+              <article class="summary-card"><span class="summary-icon icon-green">F</span><div><p>Total BBM terpakai</p><strong id="fuelTotal">Rp0</strong><small id="fuelCount">0 catatan pengisian</small></div></article>
+              <article class="summary-card"><span class="summary-icon icon-amber">L</span><div><p>Volume BBM</p><strong id="literTotal">0 L</strong><small>Terhitung dari harga per liter</small></div></article>
+            </div>
+            <div class="analytics-grid">
+              <section class="card chart-card trend-card">
+                <div class="card-heading">
+                  <div><p class="eyebrow">PERFORMA BULANAN</p><h3>Tren pengeluaran harian</h3></div>
+                  <span class="chart-caption" id="trendCaption">BOP &amp; BBM</span>
+                </div>
+                <div class="chart-legend"><span><i class="legend-bop"></i> BOP</span><span><i class="legend-fuel"></i> BBM</span></div>
+                <div class="svg-chart-wrap"><svg id="trendChart" class="svg-chart" viewBox="0 0 720 240" role="img"></svg></div>
+                <p id="trendSummary" class="chart-footnote">Ringkasan tren pengeluaran harian.</p>
+              </section>
+              <section class="card chart-card fleet-chart-card">
+                <div class="card-heading">
+                  <div><p class="eyebrow">KOMPOSISI ARMADA</p><h3>Jumlah per tipe</h3></div>
+                  <span class="subtle-chip" id="fleetTypeCount">0 tipe</span>
+                </div>
+                <div id="fleetBreakdown" class="fleet-breakdown"></div>
+                <p id="fleetSummary" class="chart-footnote"></p>
+              </section>
+              <section class="card chart-card expense-chart-card">
+                <div class="card-heading">
+                  <div><p class="eyebrow">RINCIAN BIAYA</p><h3>Pengeluaran berdasarkan kategori BOP</h3></div>
+                  <span class="chart-caption" id="expenseTotalLabel">Total Rp0</span>
+                </div>
+                <div id="expenseBreakdown" class="expense-breakdown"></div>
+                <p id="expenseSummary" class="chart-footnote"></p>
+              </section>
+            </div>
+            <div class="dashboard-grid">
+              <section class="card">
+                <div class="card-heading"><div><p class="eyebrow">AKTIVITAS</p><h3>Rincian laporan</h3></div><span class="subtle-chip" id="reportMonthChip">—</span></div>
+                <button class="quick-link" data-tab="bop" type="button"><span class="quick-icon icon-blue">↗</span><span><strong>Biaya Operasional Perjalanan</strong><small>Parkir, muat, bongkar, dan biaya lainnya</small></span><b>→</b></button>
+                <button class="quick-link" data-tab="fuel" type="button"><span class="quick-icon icon-green">◉</span><span><strong>Pengisian BBM</strong><small>Biaya, jarak tempuh, liter, dan skala</small></span><b>→</b></button>
+              </section>
+              <section class="card">
+                <div class="card-heading"><div><p class="eyebrow">DATA REFERENSI</p><h3>Master data armada</h3></div></div>
+                <div class="master-stat"><strong id="vehicleCardCount">0</strong><span>kendaraan terdaftar</span></div>
+                <p class="muted compact">Data driver, nomor polisi, tipe armada, dan uang inap dapat diperbarui kapan saja.</p>
+                <button class="button button-secondary" data-tab="master" type="button">Kelola master data <span aria-hidden="true">→</span></button>
+              </section>
+            </div>
+            <div class="note-banner"><span class="note-icon">i</span><p><strong>Catatan penyimpanan</strong><br>Perubahan tersimpan otomatis dan dipisahkan berdasarkan bulan. Unduhan Excel mencakup Master Data, BOP, dan BBM CASH.</p></div>
+          </section>
+
+          <section id="bopPanel" class="panel-view" hidden>
+            <div class="section-intro">
+              <div><p class="eyebrow">BIAYA OPERASIONAL PERJALANAN</p><h2>Rincian BOP</h2><p class="muted">Masukkan pengeluaran setiap perjalanan. Total per baris dihitung otomatis.</p></div>
+              <button class="button button-primary" data-action="add-bop" type="button"><span aria-hidden="true">＋</span> Tambah baris</button>
+            </div>
+            <div class="table-card">
+              <div class="table-meta"><span id="bopRowCount">0 catatan</span><span class="table-hint">Geser tabel ke samping untuk melihat semua kolom</span></div>
+              <div class="table-scroll"><table id="bopTable" class="data-table wide-table"></table></div>
+            </div>
+          </section>
+
+          <section id="fuelPanel" class="panel-view" hidden>
+            <div class="section-intro">
+              <div><p class="eyebrow">PEMAKAIAN BAHAN BAKAR</p><h2>BBM Cash</h2><p class="muted">Jarak tempuh, liter, dan skala dihitung otomatis dari angka yang diisi.</p></div>
+              <button class="button button-primary" data-action="add-fuel" type="button"><span aria-hidden="true">＋</span> Tambah pengisian</button>
+            </div>
+            <div class="table-card">
+              <div class="table-meta"><span id="fuelRowCount">0 catatan</span><span class="table-hint">Liter = BBM terpakai ÷ harga/liter · Jarak = KM sekarang − KM sebelumnya</span></div>
+              <div class="table-scroll"><table id="fuelTable" class="data-table wide-table"></table></div>
+            </div>
+          </section>
+
+          <section id="masterPanel" class="panel-view" hidden>
+            <div class="section-intro">
+              <div><p class="eyebrow">REFERENSI LAPORAN</p><h2>Master Data</h2><p class="muted">Perbarui daftar kendaraan dan nilai uang inap yang digunakan dalam laporan.</p></div>
+            </div>
+            <section class="card master-card">
+              <div class="card-heading"><div><p class="eyebrow">ARMADA</p><h3>Driver & kendaraan</h3><p class="muted compact">Data ini menjadi pilihan dan acuan nomor polisi serta tipe armada.</p></div><button class="button button-secondary" data-action="add-vehicle" type="button">＋ Tambah kendaraan</button></div>
+              <div class="table-scroll"><table id="vehicleTable" class="data-table master-table"></table></div>
+            </section>
+            <section class="card master-card">
+              <div class="card-heading"><div><p class="eyebrow">UANG INAP</p><h3>Tarif berdasarkan tujuan</h3><p class="muted compact">Tujuan, peran driver/helper, dan nominal dapat disesuaikan.</p></div><button class="button button-secondary" data-action="add-allowance" type="button">＋ Tambah tarif</button></div>
+              <div class="table-scroll"><table id="allowanceTable" class="data-table master-table"></table></div>
+            </section>
+          </section>
+        </div>
+        <datalist id="driverSuggestions"></datalist>
+        <div id="toast" class="toast" role="status" aria-live="polite"></div>
+      </main>
+    </div>
+    <div id="horizontalScrollDock" class="horizontal-scroll-dock" hidden aria-label="Geser tabel ke samping">
+      <button class="scroll-dock-button" type="button" data-scroll-step="-1" aria-label="Geser tabel ke kiri">←</button>
+      <div id="horizontalScrollTrack" class="horizontal-scroll-track" tabindex="0" role="scrollbar" aria-label="Geser tabel secara horizontal" aria-orientation="horizontal">
+        <div id="horizontalScrollSpacer"></div>
+      </div>
+      <button class="scroll-dock-button" type="button" data-scroll-step="1" aria-label="Geser tabel ke kanan">→</button>
+    </div>
+    <dialog id="entryDialog" class="entry-dialog" aria-labelledby="entryDialogTitle">
+      <form id="entryForm" class="entry-form">
+        <header class="entry-form-header">
+          <div class="entry-form-brand"><img src="/company-logo.png" alt=""><span>ETT BOGOR · LAPORAN OPERASIONAL</span></div>
+          <button id="entryCloseButton" class="entry-close-button" type="button" aria-label="Tutup formulir">×</button>
+          <p id="entryFormEyebrow" class="eyebrow">FORMULIR LAPORAN</p>
+          <h2 id="entryDialogTitle">Tambah data</h2>
+          <p id="entryFormDescription" class="muted"></p>
+          <div class="entry-progress-heading"><span>Progres pengisian</span><strong id="entryProgressLabel">0%</strong></div>
+          <div class="entry-progress-track"><span id="entryProgressBar"></span></div>
+        </header>
+        <div id="entryFormSections" class="entry-form-sections"></div>
+        <p id="entryFormError" class="entry-form-error" role="alert"></p>
+        <footer class="entry-form-footer">
+          <button id="entryCancelButton" class="button button-secondary" type="button">Batal</button>
+          <button class="button button-primary entry-submit-button" type="submit">Simpan data</button>
+        </footer>
+      </form>
+    </dialog>
+  </body>
+</html>
